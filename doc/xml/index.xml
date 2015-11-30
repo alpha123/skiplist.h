@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<index xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <struct name="sl_node" ref="sl_node#sl_node" />
+  <struct name="sl_skiplist" ref="sl_skiplist#sl_skiplist" />
+  <typedef id="sl_cmp_fn" name="sl_cmp_fn">
+    <type class="function" qualifier="*">
+      <result>
+        <type builtin="yes" name="int" />
+      </result>
+      <arguments>
+        <type builtin="yes" name="void" qualifier="*" />
+        <type builtin="yes" name="void" qualifier="*" />
+        <type builtin="yes" name="void" qualifier="*" />
+      </arguments>
+    </type>
+  </typedef>
+  <typedef id="sl_iter_fn" name="sl_iter_fn">
+    <type class="function" qualifier="*">
+      <result>
+        <type builtin="yes" name="int" />
+      </result>
+      <arguments>
+        <type builtin="yes" name="void" qualifier="*" />
+        <type builtin="yes" name="void" qualifier="*" />
+        <type builtin="yes" name="void" qualifier="*" />
+      </arguments>
+    </type>
+  </typedef>
+  <function id="sl__stdsrand" name="sl__stdsrand">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="sl__stdsrand::_userdata" name="_userdata">
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+  </function>
+</index>

@@ -1,0 +1,270 @@
+<?xml version='1.0' encoding='utf-8'?>
+<struct id="sl_skiplist" name="sl_skiplist" typedef="yes" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <field id="sl_skiplist::size" name="size">
+    <type builtin="yes" name="unsigned long" />
+  </field>
+  <field id="sl_skiplist::highest" name="highest">
+    <type builtin="yes" name="unsigned int" />
+  </field>
+  <field id="sl_skiplist::cmp" name="cmp">
+    <type name="sl_cmp_fn" ref="index#sl_cmp_fn" />
+  </field>
+  <field id="sl_skiplist::cmp_udata" name="cmp_udata">
+    <type builtin="yes" name="void" qualifier="*" />
+  </field>
+  <field id="sl_skiplist::mem_udata" name="mem_udata">
+    <type builtin="yes" name="void" qualifier="*" />
+  </field>
+  <field id="sl_skiplist::rand_udata" name="rand_udata">
+    <type builtin="yes" name="void" qualifier="*" />
+  </field>
+  <field id="sl_skiplist::head" name="head">
+    <type name="sl_node" qualifier="*" ref="sl_node#sl_node" />
+  </field>
+  <function id="sl_find" name="sl_find">
+    <brief> Gets a value associated with a key.</brief>
+    <return>
+      <doc>0 if the key does not exist, 1 if it does</doc>
+      <type builtin="yes" name="unsigned short" />
+    </return>
+    <argument id="sl_find::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_find::key" name="key">
+      <doc>Get the value associated with this key</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="sl_find::out" name="out">
+      <doc>If a value exists, store it at this location.
+     If this parameter is NULL, nothing is stored.</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+  </function>
+  <function id="sl_free" name="sl_free">
+    <brief> Free memory used by a skiplist.</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="sl_free::list" name="list">
+      <doc>Free this guy from his bondage to memory.</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+  </function>
+  <function id="sl_get" name="sl_get">
+    <brief> Gets a value associated with a key, or a default value.</brief>
+    <return>
+      <doc>The value associated with the key or default_val if the
+         key is not set.</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </return>
+    <argument id="sl_get::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_get::key" name="key">
+      <doc>Get the value associated with this key</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="sl_get::default_val" name="default_val">
+      <doc>If the key does not exist in this list,
+             return this value instead.</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+  </function>
+  <function id="sl_init" name="sl_init">
+    <brief> Must be called prior to using any other functions on a skiplist.</brief>
+    <return>
+      <doc>0 if successful and nonzero if something failed</doc>
+      <type builtin="yes" name="int" />
+    </return>
+    <argument id="sl_init::list" name="list">
+      <doc>a pointer to the skiplist to initialize</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_init::cmp" name="cmp">
+      <doc>the comparator function to use to order nodes</doc>
+      <type name="sl_cmp_fn" ref="index#sl_cmp_fn" />
+    </argument>
+    <argument id="sl_init::cmp_udata" name="cmp_udata">
+      <doc>Opaque pointer to pass to cmp</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="sl_init::mem_udata" name="mem_udata">
+      <doc>Opaque pointer to pass to the SKIPLIST_MALLOC and
+           SKIPLIST_FREE macros. Unused by default, but custom
+*           memory allocators may use it.</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="sl_init::rand_udata" name="rand_udata">
+      <doc>Opaque pointer to pass to the SKIPLIST_RAND and
+            SKIPLIST_SRAND macros. Unused by default, but custom
+            RNGs may use it.</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+  </function>
+  <function id="sl_insert" name="sl_insert">
+    <brief> Sets a value in the skiplist.</brief>
+    <doc>If a value already exists at that key,
+overwrite it and stick the prior value in this function's out parameter.
+
+</doc>
+    <return>
+      <doc>0 if no value was at this key, 1 if a value did exist and was
+         overwritten.</doc>
+      <type builtin="yes" name="unsigned short" />
+    </return>
+    <argument id="sl_insert::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_insert::key" name="key">
+      <doc>Associate the value with this key</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="sl_insert::val" name="val">
+      <doc>Value</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="sl_insert::prior" name="prior">
+      <doc>If non-NULL, put the prior value at this location. Not touched if
+       there was no prior value associated with this key.</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+  </function>
+  <function id="sl_iter" name="sl_iter">
+    <brief> Iterates through all key/value pairs in order.</brief>
+    <doc>If `iter` returns a non-zero value, stop the iteration and return
+that value.
+
+</doc>
+    <return>
+      <doc>The first non-zero result of `iter` or 0 if `iter` always
+        returned 0.</doc>
+      <type builtin="yes" name="int" />
+    </return>
+    <argument id="sl_iter::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_iter::iter" name="iter">
+      <doc>An iterator function to call for each key/value pair</doc>
+      <type name="sl_iter_fn" ref="index#sl_iter_fn" />
+    </argument>
+    <argument id="sl_iter::userdata" name="userdata">
+      <doc>An opaque pointer to pass to `iter`.</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+  </function>
+  <function id="sl_max" name="sl_max">
+    <brief> Returns the maximum key and value in this list.</brief>
+    <return>
+      <doc>0 if the list is empty and 1 if it is not</doc>
+      <type builtin="yes" name="unsigned short" />
+    </return>
+    <argument id="sl_max::list" name="list">
+      <doc>An initalized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_max::key_out" name="key_out">
+      <doc>Set to the largest key if non-NULL and the list is not empty</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+    <argument id="sl_max::val_out" name="val_out">
+      <doc>Set to the value associated with the largest key if non-NULL
+         and the list is not empty.</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+  </function>
+  <function id="sl_min" name="sl_min">
+    <brief> Returns the minimum key and value in this list.</brief>
+    <return>
+      <doc>0 if the list is empty and 1 if it is not</doc>
+      <type builtin="yes" name="unsigned short" />
+    </return>
+    <argument id="sl_min::list" name="list">
+      <doc>An initalized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_min::key_out" name="key_out">
+      <doc>Set to the smallest key if non-NULL and the list is not empty</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+    <argument id="sl_min::val_out" name="val_out">
+      <doc>Set to the value associated with the smallest key if non-NULL
+         and the list is not empty.</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+  </function>
+  <function id="sl_pop" name="sl_pop">
+    <brief> Removes and returns the minimum key/value pair from a list.</brief>
+    <return>
+      <doc>0 if the list was already empty and 1 if it was not</doc>
+      <type builtin="yes" name="unsigned short" />
+    </return>
+    <argument id="sl_pop::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_pop::key_out" name="key_out">
+      <doc>Set to the smallest key if non-NULL and the list is not empty</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+    <argument id="sl_pop::val_out" name="val_out">
+      <doc>Set to the value associated with the smallest key if non-NULL
+         and the list is not empty.</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+  </function>
+  <function id="sl_remove" name="sl_remove">
+    <brief> Removes a key/value pair from this list.</brief>
+    <return>
+      <doc>1 if the key used to be in the list (and was thus removed),
+         0 if it was never there</doc>
+      <type builtin="yes" name="unsigned short" />
+    </return>
+    <argument id="sl_remove::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_remove::key" name="key">
+      <doc>Key indicating the key/value pair to remove</doc>
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="sl_remove::out" name="out">
+      <doc>If non-NULL and the key existed, store the old value at this location</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+  </function>
+  <function id="sl_shift" name="sl_shift">
+    <brief> Removes and returns the maximum key/value pair from a list.</brief>
+    <return>
+      <doc>0 if the list was already empty and 1 if it was not</doc>
+      <type builtin="yes" name="unsigned short" />
+    </return>
+    <argument id="sl_shift::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+    <argument id="sl_shift::key_out" name="key_out">
+      <doc>Set to the largest key if non-NULL and the list is not empty</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+    <argument id="sl_shift::val_out" name="val_out">
+      <doc>Set to the value associated with the largest key if non-NULL
+         and the list is not empty.</doc>
+      <type builtin="yes" name="void" qualifier="**" />
+    </argument>
+  </function>
+  <function id="sl_size" name="sl_size">
+    <brief> Does what it says on the tin.</brief>
+    <return>
+      <doc>The number of key/value pairs in the skiplist</doc>
+      <type builtin="yes" name="unsigned long" />
+    </return>
+    <argument id="sl_size::list" name="list">
+      <doc>An initialized skiplist</doc>
+      <type name="sl_skiplist" qualifier="*" ref="sl_skiplist#sl_skiplist" />
+    </argument>
+  </function>
+</struct>

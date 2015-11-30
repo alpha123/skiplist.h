@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<struct id="sl_node" name="sl_node" typedef="yes" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <field id="sl_node::height" name="height">
+    <type builtin="yes" name="unsigned int" />
+  </field>
+  <field id="sl_node::key" name="key">
+    <type builtin="yes" name="void" qualifier="*" />
+  </field>
+  <field id="sl_node::val" name="val">
+    <type builtin="yes" name="void" qualifier="*" />
+  </field>
+  <field id="sl_node::prev" name="prev">
+    <type name="sl__node" qualifier="*" ref="sl_node#sl_node" />
+  </field>
+  <field id="sl_node::next" name="next">
+    <type class="array" size="33">
+      <type name="sl__node" qualifier="*" ref="sl_node#sl_node" />
+    </type>
+  </field>
+</struct>
