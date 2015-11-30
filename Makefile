@@ -1,4 +1,4 @@
-CFLAGS=-DDEBUG -g
+CFLAGS=-DDEBUG -g -O -std=c99 -Wall -Wextra -pedantic
 
 SL_HEADER=skiplist.h
 SRCS=test/test_skiplist.c test/ptest.c

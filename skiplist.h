@@ -18,7 +18,7 @@
  *      - SKIPLIST_RAND & SKIPLIST_SRAND - wrappers around stdlib rand/srand.
  *        Both are passed a void * pointer for a random context.
  *      - SKIPLIST_STATIC - if defined, declare all public functions static
- *        (make skiplist local to the file it's included frmo).
+ *        (make skiplist local to the file it's included from).
  *      - SKIPLIST_EXTERN - 'extern' by default; define to change calling convention
  *        or linkage etc.
  *
