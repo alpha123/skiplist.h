@@ -4,6 +4,9 @@ skiplist.h
 Single-header-file, public domain, type-generic C89 skip list implementation.
 -----------------------------------------------------------------------------
 
+Implements a sorted dictionary or set with a skiplist. Duplicate elements (i.e.
+a sorted linked list) are not currently supported.
+
 1. Download [skiplist.h](https://raw.githubusercontent.com/alpha123/skiplist.h/master/skiplist.h).
    That's the only file you need.
 2. Create a guarded header that defines SKIPLIST_KEY and SKIPLIST_VALUE
@@ -25,6 +28,18 @@ Other options:
    (make skiplist local to the file it's included from).
  - SKIPLIST_EXTERN - 'extern' by default; define to change calling convention
    or linkage etc.
+
+skiplist.h has no dependencies. By default it uses some functions from the C
+standard library, but that dependency can be replaced by defining the
+SKIPLIST_MALLOC, SKIPLIST_FREE, SKIPLIST_RAND, and SKIPLIST_SRAND macros.
+
+Tests
+-----
+
+Clone this repository and run 
+
+Documentation
+-------------
 
 Example Usage
 -------------
