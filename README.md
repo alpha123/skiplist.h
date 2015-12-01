@@ -36,10 +36,15 @@ SKIPLIST_MALLOC, SKIPLIST_FREE, SKIPLIST_RAND, and SKIPLIST_SRAND macros.
 Tests
 -----
 
-Clone this repository and run 
+Clone this repository and run `make`. The default Makefile runs builds and runs
+the test suite.
 
 Documentation
 -------------
+
+The documentation is built with [cldoc](https://github.com/jessevdk/cldoc) and
+should be viewed in a web browser. To build the doc yourself, install cldoc and
+run `make doc` from this repository's root.
 
 Example Usage
 -------------
