@@ -88,12 +88,123 @@ TEST(iter)
     }
 END(iter)
 
+int int_iter_stop(int k, int v, void *data) {
+    struct iter_data *id = (struct iter_data *)data;
+    id->keys[id->cnt] = k;
+    id->vals[id->cnt++] = v;
+    return k == 3;
+}
+
+TEST(iter_stop)
+    struct iter_data id;
+    id.cnt = 0;
+    PT_ASSERT(sl_iter(&sl, int_iter_stop, &id) == 0);
+    PT_ASSERT(id.cnt == 0);
+
+    sl_insert(&sl, 2, 10, NULL);
+    sl_insert(&sl, 3, 3, NULL);
+    sl_insert(&sl, 1, 5, NULL);
+    sl_insert(&sl, 2, 4, NULL);
+    sl_insert(&sl, 5, 1, NULL);
+    sl_insert(&sl, 4, 2, NULL);
+
+    PT_ASSERT(sl_iter(&sl, int_iter_stop, &id) == 1);
+    PT_ASSERT(id.cnt == 3);
+    for (int i = 0; i < 3; ++i) {
+        PT_ASSERT(id.keys[i] == i+1);
+        PT_ASSERT(id.vals[i] == 5-i);
+    }
+END(iter_stop)
+
+TEST(remove)
+    int rm;
+    PT_ASSERT(sl_remove(&sl, 2, &rm) == 0);
+    sl_insert(&sl, 2, 4, NULL);
+    sl_insert(&sl, 7, 6, NULL);
+    sl_insert(&sl, 2, 5, NULL);
+    sl_insert(&sl, 1, 1, NULL);
+    PT_ASSERT(sl_remove(&sl, 2, &rm) == 1);
+    PT_ASSERT(rm == 5);
+    PT_ASSERT(sl_remove(&sl, 2, &rm) == 0);
+    PT_ASSERT(sl_find(&sl, 2, NULL) == 0);
+END(remove)
+
+TEST(min)
+    int min, val;
+    PT_ASSERT(sl_min(&sl, &min, &val) == 0);
+    sl_insert(&sl, 5, 11, NULL);
+    sl_insert(&sl, 3, 11, NULL);
+    sl_insert(&sl, 7, 10, NULL);
+    sl_insert(&sl, 1, 13, NULL);
+    sl_insert(&sl, 9, 12, NULL);
+    sl_insert(&sl, 1, 17, NULL);
+    PT_ASSERT(sl_min(&sl, &min, &val) == 1);
+    PT_ASSERT(min == 1);
+    PT_ASSERT(val == 17);
+END(min)
+
+TEST(max)
+    int max, val;
+    PT_ASSERT(sl_max(&sl, &max, &val) == 0);
+    sl_insert(&sl, 5, 11, NULL);
+    sl_insert(&sl, 3, 11, NULL);
+    sl_insert(&sl, 7, 10, NULL);
+    sl_insert(&sl, 1, 13, NULL);
+    sl_insert(&sl, 9, 12, NULL);
+    sl_insert(&sl, 1, 17, NULL);
+    PT_ASSERT(sl_max(&sl, &max, &val) == 1);
+    PT_ASSERT(max == 9);
+    PT_ASSERT(val == 12);
+END(max)
+
+TEST(pop)
+    int min, val;
+    PT_ASSERT(sl_pop(&sl, &min, &val) == 0);
+
+    sl_insert(&sl, 2, 10, NULL);
+    sl_insert(&sl, 3, 3, NULL);
+    sl_insert(&sl, 1, 5, NULL);
+    sl_insert(&sl, 2, 4, NULL);
+    sl_insert(&sl, 5, 1, NULL);
+    sl_insert(&sl, 4, 2, NULL);
+
+    for (int i = 0; i < 5; ++i) {
+        PT_ASSERT(sl_pop(&sl, &min, &val) == 1);
+        PT_ASSERT(min == i + 1);
+        PT_ASSERT(val == 5 - i);
+    }
+END(pop)
+
+TEST(shift)
+    int max, val;
+    PT_ASSERT(sl_shift(&sl, &max, &val) == 0);
+
+    sl_insert(&sl, 2, 10, NULL);
+    sl_insert(&sl, 3, 3, NULL);
+    sl_insert(&sl, 1, 5, NULL);
+    sl_insert(&sl, 2, 4, NULL);
+    sl_insert(&sl, 5, 1, NULL);
+    sl_insert(&sl, 4, 2, NULL);
+
+    for (int i = 0; i < 5; ++i) {
+        PT_ASSERT(sl_shift(&sl, &max, &val) == 1);
+        PT_ASSERT(max == 5 - i);
+        PT_ASSERT(val == i + 1);
+    }
+END(shift)
+
 void suite_skiplist(void) {
     pt_add_test(test_insert, "Should insert key/value pairs", "");
     pt_add_test(test_find, "Should find values that exist", "");
     pt_add_test(test_get, "Should be able to return a default value for keys that don't exist", "");
     pt_add_test(test_size, "Should keep track of its size", "");
     pt_add_test(test_iter, "Should iterate over keys in order", "");
+    pt_add_test(test_iter_stop, "Should be able to stop iteration from the callback", "");
+    pt_add_test(test_remove, "Should be able to remove items", "");
+    pt_add_test(test_min, "Should find the minimum key", "");
+    pt_add_test(test_max, "Should find the maximum key", "");
+    pt_add_test(test_pop, "Should remove the minimum key", "");
+    pt_add_test(test_shift, "Should remove the maximum key", "");
 }
 
 int main(int argc, const char **argv) {
