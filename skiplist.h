@@ -385,18 +385,26 @@ short SKIPLIST_NAME(insert)(SL_LIST *list, SL_KEY key, SL_VAL val, SL_VAL *prior
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(find)(SL_LIST *list, SL_KEY key, SL_VAL *out) {
     SL_NODE *n;
+    int cmp;
     unsigned int i;
     n = list->head;
     i = list->highest;
 
     while (i --> 0) {
-        while (n->next[i] && list->cmp(key, n->next[i]->key, list->cmp_udata) > 0)
+        while (n->next[i]) {
+            if ((cmp = list->cmp(key, n->next[i]->key, list->cmp_udata)) == 0)
+                goto found;
+            else if (cmp < 0)
+                break;
             n = n->next[i];
+        }
     }
+    return 0;
 
-    if (n->next[0] && out)
-        *out = n->next[0]->val;
-    return n->next[0] != NULL;
+    found:
+    if (out)
+        *out = n->next[i]->val;
+    return 1;
 }
 
 SKIPLIST_EXTERN
@@ -409,6 +417,34 @@ SL_VAL SKIPLIST_NAME(get)(SL_LIST *list, SL_KEY key, SL_VAL default_val) {
 
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(remove)(SL_LIST *list, SL_KEY key, SL_VAL *out) {
+    SL_NODE *n, *found;
+    int cmp;
+    unsigned int i;
+    n = list->head;
+    i = list->highest;
+
+    while (i --> 0) {
+        while (n->next[i]) {
+            if ((cmp = list->cmp(key, n->next[i]->key, list->cmp_udata)) == 0) {
+                found = n->next[i];
+                goto unlink;
+            }
+            else if (cmp < 0)
+                break;
+            n = n->next[i];
+        }
+    }
+    return 0;
+
+    unlink:
+    if (out)
+        *out = found->val;
+    i = found->height;
+    while (i --> 0)
+        n->next[i] = found->next[i];
+    SKIPLIST_FREE(list->mem_udata, found);
+    --list->size;
+    return 1;
 }
 
 SKIPLIST_EXTERN
@@ -431,18 +467,78 @@ unsigned long SKIPLIST_NAME(size)(SL_LIST *list) {
 
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(min)(SL_LIST *list, SL_KEY *key_out, SL_VAL *val_out) {
+    if (list->size == 0)
+        return 0;
+    if (key_out)
+        *key_out = list->head->next[0]->key;
+    if (val_out)
+        *val_out = list->head->next[0]->val;
+    return 1;
 }
 
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(max)(SL_LIST *list, SL_KEY *key_out, SL_VAL *val_out) {
+    int i;
+    SL_NODE *n;
+    if (list->size == 0)
+        return 0;
+    /* TODO store the biggest */
+    n = list->head;
+    for (i = 0; i < list->size; ++i)
+        n = n->next[0];
+    if (key_out)
+        *key_out = n->key;
+    if (val_out)
+        *val_out = n->val;
+    return 1;
 }
 
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(pop)(SL_LIST *list, SL_KEY *key_out, SL_VAL *val_out) {
+    int i;
+    SL_NODE *first;
+
+    if (list->size == 0)
+        return 0;
+
+    first = list->head->next[0];
+    i = first->height + 1;
+    while (i --> 0) {
+        if (list->head->next[i])
+            list->head->next[i] = first->next[i];
+        else
+            --list->highest;
+    }
+
+    if (key_out)
+        *key_out = first->key;
+    if (val_out)
+        *val_out = first->val;
+    SKIPLIST_FREE(list->mem_udata, first);
+    --list->size;
+    return 1;
 }
 
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(shift)(SL_LIST *list, SL_KEY *key_out, SL_VAL *val_out) {
+    int i;
+    SL_NODE *penultimate, *last;
+    if (list->size == 0)
+        return 0;
+    penultimate = list->head;
+    for (i = 0; i < list->size - 1; ++i)
+        penultimate = penultimate->next[0];
+    last = penultimate->next[0];
+    if (key_out)
+        *key_out = last->key;
+    if (val_out)
+        *val_out = last->val;
+    i = penultimate->height;
+    while (i --> 0)
+        penultimate->next[i] = NULL;
+    SKIPLIST_FREE(list->mem_udata, last);
+    --list->size;
+    return 1;
 }
 
 #endif

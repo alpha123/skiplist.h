@@ -127,6 +127,7 @@ TEST(remove)
     PT_ASSERT(rm == 5);
     PT_ASSERT(sl_remove(&sl, 2, &rm) == 0);
     PT_ASSERT(sl_find(&sl, 2, NULL) == 0);
+    PT_ASSERT(sl_size(&sl) == 2);
 END(remove)
 
 TEST(min)
@@ -141,6 +142,7 @@ TEST(min)
     PT_ASSERT(sl_min(&sl, &min, &val) == 1);
     PT_ASSERT(min == 1);
     PT_ASSERT(val == 17);
+    PT_ASSERT(sl_size(&sl) == 5);
 END(min)
 
 TEST(max)
@@ -155,6 +157,7 @@ TEST(max)
     PT_ASSERT(sl_max(&sl, &max, &val) == 1);
     PT_ASSERT(max == 9);
     PT_ASSERT(val == 12);
+    PT_ASSERT(sl_size(&sl) == 5);
 END(max)
 
 TEST(pop)
@@ -173,6 +176,8 @@ TEST(pop)
         PT_ASSERT(min == i + 1);
         PT_ASSERT(val == 5 - i);
     }
+
+    PT_ASSERT(sl_size(&sl) == 0);
 END(pop)
 
 TEST(shift)
@@ -191,6 +196,8 @@ TEST(shift)
         PT_ASSERT(max == 5 - i);
         PT_ASSERT(val == i + 1);
     }
+
+    PT_ASSERT(sl_size(&sl) == 0);
 END(shift)
 
 void suite_skiplist(void) {
