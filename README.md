@@ -36,7 +36,7 @@ SKIPLIST_MALLOC, SKIPLIST_FREE, SKIPLIST_RAND, and SKIPLIST_SRAND macros.
 Tests
 -----
 
-Clone this repository and run `make`. The default Makefile runs builds and runs
+Clone this repository and run `make`. The default Makefile builds and runs
 the test suite.
 
 Documentation
