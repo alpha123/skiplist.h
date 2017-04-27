@@ -418,33 +418,36 @@ SL_VAL SKIPLIST_NAME(get)(SL_LIST *list, SL_KEY key, SL_VAL default_val) {
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(remove)(SL_LIST *list, SL_KEY key, SL_VAL *out) {
     SL_NODE *n, *found;
+    SL_NODE *update[SKIPLIST_MAX_LEVELS];
     int cmp;
     unsigned int i;
     n = list->head;
     i = list->highest;
 
     while (i --> 0) {
-        while (n->next[i]) {
-            if ((cmp = list->cmp(key, n->next[i]->key, list->cmp_udata)) == 0) {
-                found = n->next[i];
-                goto unlink;
-            }
-            else if (cmp < 0)
-                break;
+        while (n->next[i] && (cmp = list->cmp(n->next[i]->key, key, list->cmp_udata)) < 0) {
             n = n->next[i];
         }
+        update[i] = n;
+    }
+
+    n = n->next[0];
+    if (n && (list->cmp(n->key, key, list->cmp_udata) == 0) && out) {
+      *out = n->val;
+      i = 0;
+      while (i < list->highest) {
+        if (update[i]->next[i] != n) break;
+        update[i]->next[i] = n->next[i];
+        i++;
+      }
+      SKIPLIST_FREE(list->mem_udata, n);
+      while (list->highest > 0 && list->head->next[list->highest - 1] == NULL) {
+        --list->highest;
+      }
+      --list->size;
+      return 1;
     }
     return 0;
-
-    unlink:
-    if (out)
-        *out = found->val;
-    i = found->height;
-    while (i --> 0)
-        n->next[i] = found->next[i];
-    SKIPLIST_FREE(list->mem_udata, found);
-    --list->size;
-    return 1;
 }
 
 SKIPLIST_EXTERN
