@@ -118,6 +118,7 @@ END(iter_stop)
 
 TEST(remove)
     int rm;
+    int val;
     PT_ASSERT(sl_remove(&sl, 2, &rm) == 0);
     sl_insert(&sl, 2, 4, NULL);
     sl_insert(&sl, 7, 6, NULL);
@@ -128,6 +129,10 @@ TEST(remove)
     PT_ASSERT(sl_remove(&sl, 2, &rm) == 0);
     PT_ASSERT(sl_find(&sl, 2, NULL) == 0);
     PT_ASSERT(sl_size(&sl) == 2);
+    PT_ASSERT(sl_find(&sl, 7, &val) == 1);
+    PT_ASSERT(val == 6);
+    PT_ASSERT(sl_find(&sl, 1, &val) == 1);
+    PT_ASSERT(val == 1);
 END(remove)
 
 TEST(min)
