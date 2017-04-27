@@ -417,7 +417,7 @@ SL_VAL SKIPLIST_NAME(get)(SL_LIST *list, SL_KEY key, SL_VAL default_val) {
 
 SKIPLIST_EXTERN
 short SKIPLIST_NAME(remove)(SL_LIST *list, SL_KEY key, SL_VAL *out) {
-    SL_NODE *n, *found;
+    SL_NODE *n;
     SL_NODE *update[SKIPLIST_MAX_LEVELS];
     int cmp;
     unsigned int i;
