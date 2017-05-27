@@ -118,6 +118,7 @@ END(iter_stop)
 
 TEST(remove)
     int rm;
+    int val;
     PT_ASSERT(sl_remove(&sl, 2, &rm) == 0);
     sl_insert(&sl, 2, 4, NULL);
     sl_insert(&sl, 7, 6, NULL);
@@ -128,6 +129,10 @@ TEST(remove)
     PT_ASSERT(sl_remove(&sl, 2, &rm) == 0);
     PT_ASSERT(sl_find(&sl, 2, NULL) == 0);
     PT_ASSERT(sl_size(&sl) == 2);
+    PT_ASSERT(sl_find(&sl, 7, &val) == 1);
+    PT_ASSERT(val == 6);
+    PT_ASSERT(sl_find(&sl, 1, &val) == 1);
+    PT_ASSERT(val == 1);
 END(remove)
 
 TEST(min)
@@ -201,17 +206,17 @@ TEST(shift)
 END(shift)
 
 void suite_skiplist(void) {
-    pt_add_test(test_insert, "Should insert key/value pairs", "");
-    pt_add_test(test_find, "Should find values that exist", "");
-    pt_add_test(test_get, "Should be able to return a default value for keys that don't exist", "");
-    pt_add_test(test_size, "Should keep track of its size", "");
-    pt_add_test(test_iter, "Should iterate over keys in order", "");
-    pt_add_test(test_iter_stop, "Should be able to stop iteration from the callback", "");
-    pt_add_test(test_remove, "Should be able to remove items", "");
-    pt_add_test(test_min, "Should find the minimum key", "");
-    pt_add_test(test_max, "Should find the maximum key", "");
-    pt_add_test(test_pop, "Should remove the minimum key", "");
-    pt_add_test(test_shift, "Should remove the maximum key", "");
+    pt_add_test(test_insert, "Should insert key/value pairs", "skiplist");
+    pt_add_test(test_find, "Should find values that exist", "skiplist");
+    pt_add_test(test_get, "Should be able to return a default value for keys that don't exist", "skiplist");
+    pt_add_test(test_size, "Should keep track of its size", "skiplist");
+    pt_add_test(test_iter, "Should iterate over keys in order", "skiplist");
+    pt_add_test(test_iter_stop, "Should be able to stop iteration from the callback", "skiplist");
+    pt_add_test(test_remove, "Should be able to remove items", "skiplist");
+    pt_add_test(test_min, "Should find the minimum key", "skiplist");
+    pt_add_test(test_max, "Should find the maximum key", "skiplist");
+    pt_add_test(test_pop, "Should remove the minimum key", "skiplist");
+    pt_add_test(test_shift, "Should remove the maximum key", "skiplist");
 }
 
 int main(int argc, const char **argv) {
